@@ -22,6 +22,8 @@ bool gz_input = false;
 int barcode_length_1 = -1;
 int barcode_length_2 = -1;
 int ignored_sequence_prefix_length = -1;
+int ignored_sequence_prefix_length_1 = -1;
+int ignored_sequence_prefix_length_2 = -1;
 int minimizer_count = -1;
 int error_tolerance = -1;
 int minimizer_threshold = -1;
@@ -80,7 +82,17 @@ void parse_flags(int argc, char *argv[]){
             continue;
         }
         if ((ignored_sequence_prefix_length == -1) && (current_param == "-p" || current_param == "--ignored-sequence-prefix-length")) {
-            ignored_sequence_prefix_length = atoi(argv[i+1]);
+            ignored_sequence_prefix_length_1 = ignored_sequence_prefix_length_2 = atoi(argv[i+1]);
+            i++;
+            continue;
+        }
+        if ((ignored_sequence_prefix_length_1 == -1) && (current_param == "-p1" || current_param == "--ignored-sequence-prefix-length-1")) {
+            ignored_sequence_prefix_length_1 = atoi(argv[i+1]);
+            i++;
+            continue;
+        }
+        if ((ignored_sequence_prefix_length_2 == -1) && (current_param == "-p2" || current_param == "--ignored-sequence-prefix-length-2")) {
+            ignored_sequence_prefix_length_2 = atoi(argv[i+1]);
             i++;
             continue;
         }
@@ -126,6 +138,12 @@ void parse_flags(int argc, char *argv[]){
     }
     if (ignored_sequence_prefix_length == -1) {
         ignored_sequence_prefix_length = 0;
+    }
+    if (ignored_sequence_prefix_length_1 == -1) {
+        ignored_sequence_prefix_length_1 = 0;
+    }
+    if (ignored_sequence_prefix_length_2 == -1) {
+        ignored_sequence_prefix_length_2 = 0;
     }
     if (thread_count == -1) {
         thread_count = 1;
@@ -274,7 +292,8 @@ void print_flags(){
     cout << "\toutput_prefix:\t" << output_prefix << "\n";
     cout << "\tbarcode_length_1:\t" << barcode_length_1 << "\n";
     cout << "\tbarcode_length_2:\t" << barcode_length_2 << "\n";
-    cout << "\tignored_sequence_prefix_length:\t" << ignored_sequence_prefix_length << "\n";
+    cout << "\tignored_sequence_prefix_length_1:\t" << ignored_sequence_prefix_length_1 << "\n";
+    cout << "\tignored_sequence_prefix_length_2:\t" << ignored_sequence_prefix_length_2 << "\n";
     cout << "\tminimizer_count:\t" << minimizer_count << "\n";
     cout << "\tkmer_size:\t" << kmer_size << "\n";
     cout << "\terror_tolerance:\t" << error_tolerance << "\n";
@@ -299,6 +318,8 @@ void print_help(){
     cout << "\t-l1   --barcode-length-1              \t(type: int;      REQUIRED paramter unless -l is provided)\n";
     cout << "\t-l2   --barcode-length-2              \t(type: int;      REQUIRED paramter unless -l is provided)\n";
     cout << "\t-p    --ignored-sequence-prefix-length\t(type: int;      default: 0)\n";
+    cout << "\t-p1   --ignored-sequence-prefix-length-1\t(type: int;      default: 0)\n";
+    cout << "\t-p2   --ignored-sequence-prefix-length-2\t(type: int;      default: 0)\n";
     cout << "\t-m    --minimizer-count               \t(type: int;      default: Depends on observed read length;)\n";
     cout << "\t-k    --kmer-size                     \t(type: int;      default: Depends on observed read length;)\n";
     cout << "\t-e    --error-tolerance               \t(type: int;      default: Depends on observed read length;)\n";
